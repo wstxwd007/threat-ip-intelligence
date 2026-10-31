@@ -1,0 +1,38 @@
+{
+  "comparison": {
+    "additional_ipv4_addresses_from_ros6": 32127,
+    "additional_ipv4_addresses_from_spamhaus": 14915536,
+    "combined_unique_ipv4_addresses": 14949503,
+    "exact_same_entries": 0,
+    "overlap_ipv4_addresses": 1840,
+    "ros6_cidr_entries": 1348,
+    "ros6_entries_fully_covered_by_spamhaus": 1497,
+    "ros6_entry_count": 26305,
+    "ros6_ipv4_addresses_covered": 33967,
+    "ros6_single_ip_entries": 24957,
+    "spamhaus_cidr_entries": 1756,
+    "spamhaus_entries_fully_covered_by_ros6": 0,
+    "spamhaus_entry_count": 1756,
+    "spamhaus_ipv4_addresses_covered": 14917376,
+    "spamhaus_single_ip_entries": 0
+  },
+  "generated_at": "2026-10-31T02:10:22+00:00",
+  "inputs": {
+    "ros6_duplicate_rows": 0,
+    "ros6_raw_count": 26305,
+    "ros6_rejected_count": 0,
+    "ros6_sha256": "d9b0405d4a66838f7dfae25ff68da9a46b7baddc853cbe63d7404183fb686c5e",
+    "ros6_source": "ros6.com scaners.netbsd",
+    "spamhaus_ipv4_sha256": "0caa53cb451f9f2d9d3ad425b5715ab62bd43ebe6f3b2962aaeaf56b3bc4d69d",
+    "spamhaus_published_at": "2026-10-31T01:19:10+00:00"
+  },
+  "mode": "AUDIT_ONLY_NO_PUBLIC_ROS6_IPS",
+  "notes": [
+    "counts represent IP/CIDR entries, coverage is unique IPv4 addresses",
+    "no ros6 raw IPs or merged IP feed published",
+    "does not represent current RB5009 address-list without a separate export"
+  ],
+  "project": "threat-ip-intelligence",
+  "schema": 1,
+  "version": "0.1.2-r1"
+}
