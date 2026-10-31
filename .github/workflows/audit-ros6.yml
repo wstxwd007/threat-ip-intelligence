@@ -1,0 +1,36 @@
+name: audit-ros6
+on:
+  schedule:
+    - cron: '47 2 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: threat-ip-ros6-audit
+  cancel-in-progress: false
+jobs:
+  audit:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6.1.0
+        with:
+          persist-credentials: true
+      - name: Run offline unit tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Read-only audit of ros6 against published Spamhaus
+        run: python3 -m threatip.audit --config config/ros6-audit.json --dist dist --out reports
+      - name: Show aggregate report only
+        run: cat reports/ros6-latest.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish only aggregate statistics and hashes
+        run: |
+          git add reports/ros6-latest.json reports/ros6-latest.md
+          if git diff --cached --quiet; then
+            echo 'No report change'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'audit: update ros6 overlap statistics (no source IPs)'
+          git push origin HEAD:main

@@ -4,6 +4,7 @@ import ipaddress
 from datetime import datetime, timezone
 import json
 import re
+import shlex
 import ssl
 import urllib.parse
 import urllib.request
@@ -112,22 +113,46 @@ def extract_candidates(data: bytes, fmt: str) -> list[str]:
         result = [line.split("#", 1)[0].strip() for line in text.splitlines()]
         result = [item for item in result if item]
     elif fmt == "ros6_rsc":
-        # Optional compatibility input: interpret data-only address additions.
-        # Never pass RSC to RouterOS /import; never run arbitrary RouterOS commands.
+        # RouterOS .rsc is UNTRUSTED CODE, not a data format. Parse only a
+        # narrowly allowed subset of address-list additions; NEVER execute or
+        # upload the original file. Any unrecognized command aborts the audit.
         result = []
-        for line in text.splitlines():
-            line = line.strip()
-            if not line or line.startswith(("#", ";")) or line in ("/ip firewall address-list", "/ip/firewall/address-list"):
+        sections = ("/ip firewall address-list", "/ip/firewall/address-list")
+        allowed_keys = {"address", "list", "comment", "timeout", "disabled"}
+        for raw in text.splitlines():
+            line = raw.strip()
+            if not line or line.startswith(("#", ";;;")):
                 continue
+            if line in sections:
+                continue
+            for prefix in sections:
+                if line.startswith(prefix + " add "):
+                    line = line[len(prefix):].strip()
+                    break
             if not line.startswith("add "):
                 raise FeedError("unsupported RouterOS script directive; abort whole source")
-            matches = re.findall(r'(?:^|\s)(address|list)=([^\s";]+)', line)
-            attrs = dict(matches)
-            if attrs.get("list") != "scaners" or "address" not in attrs:
-                raise FeedError("RSC entry missing list=scaners or address")
-            # Forbid command substitutions, line continuations, and separators even in ignored fields.
-            if any(x in line for x in ("[", "]", "$", "\\", ";", "\r")):
+            # Shell constructs, command substitution, RSC control expressions,
+            # and line continuations are never needed for plain IP entries.
+            if any(c in line for c in ("[", "]", "$", "\\", ";", "\r")):
                 raise FeedError("unsafe or unsupported RSC syntax")
+            try:
+                tokens = shlex.split(line, posix=True)
+            except ValueError as ex:
+                raise FeedError("unbalanced RSC quoting") from ex
+            if not tokens or tokens[0] != "add":
+                raise FeedError("unsupported RouterOS script directive")
+            attrs: dict[str, str] = {}
+            for token in tokens[1:]:
+                if "=" not in token:
+                    raise FeedError("RSC attribute syntax invalid")
+                key, value = token.split("=", 1)
+                if key not in allowed_keys or key in attrs:
+                    raise FeedError("unsupported or repeated RSC attribute")
+                attrs[key] = value
+            if attrs.get("list") != "scaners" or not attrs.get("address"):
+                raise FeedError("RSC entry missing list=scaners or address")
+            if attrs.get("disabled", "no") not in ("no", "false"):
+                raise FeedError("disabled or unsupported RSC entry")
             result.append(attrs["address"])
     else:
         raise FeedError(f"unknown feed format {fmt!r}")

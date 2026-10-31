@@ -1,5 +1,14 @@
 # 更新记录
 
+## v0.1.2 — 2026-10-31
+
+- 新增 `threatip.audit`：下载或从本地只读解析 ros6 `scaners.rsc`，全程不执行 RSC、不接触 RouterOS API。
+- 严格允许 `/ip firewall address-list` 的安全 `add list=scaners address=...` 语法；拒绝命令替换、脚本控制、非法属性和非公网 IP。
+- 对 ros6 与已发布且 SHA-256 验证通过的 Spamhaus DROP 进行精确条目重合、CIDR 覆盖、真实 IPv4 地址覆盖量和增量分析，不盲目扩大网段。
+- 新增每日 `audit-ros6` GitHub Actions，只有聚合统计和来源哈希进入 `reports/`，不提交 ros6 原始名单及合并 IP 库。
+- 数据源或发布数据异常时失败并保留上次报告，公开 Spamhaus 构建、`scaners` 与 RAW 规则不变。
+- 新增审计安全/数学/发布回归测试与中文操作指南；因未能实时读取 ros6 下载站，线上格式及 9443 连通性仍需用户运行 Actions 验证。
+
 ## v0.1.1 — 2026-10-31
 
 - 修复 Github Actions 实际采集 Spamhaus DROP 时 `invalid Spamhaus JSON feed` 错误。

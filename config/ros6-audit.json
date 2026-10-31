@@ -1,0 +1,9 @@
+{
+  "format": "ros6_rsc",
+  "url": "https://pcdn.ros6.com:9443/oss/scaners.rsc",
+  "min_ros6_entries": 1000,
+  "max_ros6_entries": 100000,
+  "max_spamhaus_age_hours": 72,
+  "publication_policy": "AUDIT_AGGREGATES_ONLY_NO_RAW_OR_MERGED_ROS6_IPS",
+  "license_note": "ros6 data redistribution not confirmed; only publish counts and hashes"
+}

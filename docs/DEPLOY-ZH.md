@@ -1,4 +1,4 @@
-# Threat IP Intelligence v0.1.1 — 中文部署手册
+# Threat IP Intelligence v0.1.2 — 中文部署手册
 
 ## 0. 安全承诺与先决条件
 
@@ -153,3 +153,32 @@ sudo journalctl -u tipi-routeros.service -n 80 --no-pager
 ## 8. 没有直接执行的内容
 
 本文件不在你的 RB5009 上执行任何操作、不访问你的密码、不改变 RAW、Filter、NAT、PPPoe 或默认路由。所有涉及线上写操作的步骤由你在本机完成并验收。
+
+
+## 7. v0.1.2 GitHub 仓库覆盖升级（不重新建仓）
+
+将 v0.1.2 源码 ZIP **解压覆盖已有项目文件夹**，但保留原 `.git` 和 `dist/` 目录；不可删除旧目录重来。
+
+在 Windows PowerShell 中：
+
+```powershell
+cd "$env:USERPROFILE\Downloads\threat-ip-intelligence"
+git status --short
+git diff --check
+py -3 -m unittest discover -s tests -v
+git add -A
+git commit -m "feat: ros6 read-only overlap audit v0.1.2"
+git push origin main
+```
+
+`tests` 通过后触发新的 `audit-ros6`。该工作流与现有 `publish-ip-feeds` **分离**；如审核任务失败，生产数据发布仍按原来方式工作。
+
+```powershell
+gh workflow list
+gh workflow run audit-ros6.yml --ref main
+gh run list --workflow audit-ros6.yml --limit 5
+```
+
+成功后浏览 `reports/ros6-latest.md`。若失败，使用 `gh run view <运行ID> --log-failed` 查看失败原因。**不能以 `-k` 跳过 TLS 校验来强行通过验收。**
+
+ros6 私有文件、RB5009 导出及 `.rsc` 不应进入公开仓库，更多见 [ROS6-AUDIT-ZH.md](ROS6-AUDIT-ZH.md)。

@@ -9,3 +9,8 @@ __pycache__/
 *.sqlite*
 backup/
 local/
+
+# Never publish locally downloaded third-party raw data or RouterOS exports
+*.rsc
+*.raw
+raw/
