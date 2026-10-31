@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-10-31T01:19:10+00:00",
+  "ipv4_count": 1756,
+  "ipv4_file": "ipv4.txt",
+  "ipv4_sha256": "0caa53cb451f9f2d9d3ad425b5715ab62bd43ebe6f3b2962aaeaf56b3bc4d69d",
+  "policy": "exact-set-no-expansion; private/special ranges excluded",
+  "project": "threat-ip-intelligence",
+  "schema": 1,
+  "sources": [
+    {
+      "attribution": "© Spamhaus Project; source refreshed on the published date",
+      "homepage": "https://www.spamhaus.org/blocklists/do-not-route-or-peer/",
+      "license": "Spamhaus DROP fair use; retain Spamhaus Project credit, date and copyright",
+      "name": "Spamhaus DROP IPv4",
+      "raw_count": 1757,
+      "rejected_count": 0,
+      "sha256_source": "54fa6c176e0c5df570408e012afda37b06f0d54f033633bf2ad40bb4902c0f52",
+      "valid_count": 1756
+    }
+  ]
+}
