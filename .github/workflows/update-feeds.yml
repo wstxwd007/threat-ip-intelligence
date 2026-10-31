@@ -1,0 +1,35 @@
+name: publish-ip-feeds
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: threat-ip-publisher
+  cancel-in-progress: false
+jobs:
+  publish:
+    # Only default repository branch is allowed to write generated feeds.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6.1.0
+        with:
+          persist-credentials: true
+      - name: Run tests before network access
+        run: python3 -m unittest discover -s tests -v
+      - name: Build checked threat feed
+        run: python3 -m threatip.build --config config/sources.json --out dist
+      - name: Publish data files only if changed
+        run: |
+          git add dist/ipv4.txt dist/manifest.json dist/SHA256SUMS
+          if git diff --cached --quiet; then
+            echo 'No feed change'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'data: update validated threat IP feed'
+          git push origin HEAD:main

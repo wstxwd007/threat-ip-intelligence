@@ -1,0 +1,34 @@
+{
+  "max_entries": 150000,
+  "sources": [
+    {
+      "name": "Spamhaus DROP IPv4",
+      "enabled": true,
+      "url": "https://www.spamhaus.org/drop/drop_v4.json",
+      "format": "spamhaus_json",
+      "homepage": "https://www.spamhaus.org/blocklists/do-not-route-or-peer/",
+      "license": "Spamhaus DROP fair use; retain Spamhaus Project credit, date and copyright",
+      "attribution": "© Spamhaus Project; source refreshed on the published date"
+    },
+    {
+      "name": "Feodo Tracker C2 IPv4",
+      "enabled": false,
+      "url": "https://feodotracker.abuse.ch/downloads/ipblocklist.txt",
+      "format": "plain",
+      "homepage": "https://feodotracker.abuse.ch/blocklist/",
+      "license": "CC0 per abuse.ch Terms of Use (2026-10-21)",
+      "attribution": "abuse.ch Feodo Tracker",
+      "max_age_days": 30,
+      "note": "Disabled by default because upstream text page last updated 2026-03-04; turn on only after validating recency."
+    },
+    {
+      "name": "ros6 scaners (permission required before public redistribution)",
+      "enabled": false,
+      "url": "https://pcdn.ros6.com:9443/oss/scaners.rsc",
+      "format": "ros6_rsc",
+      "homepage": "https://www.ros6.com/?action=show&id=261",
+      "license": "UNKNOWN: do not publish until owner grants redistribution permission",
+      "attribution": "熊茂祥 / ros6.com"
+    }
+  ]
+}

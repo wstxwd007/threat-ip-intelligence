@@ -1,0 +1,7 @@
+{
+  "max_entries": 100,
+  "sources": [
+    {"name": "synthetic unit test ONLY", "enabled": true, "file": "samples/feed.txt", "format": "plain", "license": "synthetic", "attribution": "synthetic sample"},
+    {"name": "synthetic Spamhaus style ONLY", "enabled": true, "file": "samples/spamhaus.json", "format": "spamhaus_json", "license": "synthetic", "attribution": "synthetic sample"}
+  ]
+}

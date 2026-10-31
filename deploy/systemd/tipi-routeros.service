@@ -1,0 +1,22 @@
+[Unit]
+Description=Threat IP Intelligence - RouterOS scaners incremental update
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=tipi
+Group=tipi
+WorkingDirectory=/opt/threat-ip-intelligence
+EnvironmentFile=/etc/threat-ip-intelligence/credentials.env
+ExecStart=/opt/threat-ip-intelligence/scripts/update-routeros.sh
+TimeoutStartSec=30min
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

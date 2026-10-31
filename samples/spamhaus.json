@@ -1,0 +1,4 @@
+[
+  {"cidr": "8.8.4.0/24", "type": "ipv4", "sblid": "SBLTEST"},
+  {"cidr": "9.9.9.9/32", "type": "ipv4", "sblid": "SBLTEST"}
+]
