@@ -1,4 +1,3 @@
-[
-  {"cidr": "8.8.4.0/24", "type": "ipv4", "sblid": "SBLTEST"},
-  {"cidr": "9.9.9.9/32", "type": "ipv4", "sblid": "SBLTEST"}
-]
+{"cidr":"8.8.4.0/24","sblid":"SBLTEST"}
+{"cidr":"9.9.9.9/32","sblid":"SBLTEST"}
+{"type":"metadata","timestamp":1793400000,"copyright":"SYNTHETIC TEST DATA - NOT A REAL SPAMHAUS FEED"}

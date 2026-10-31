@@ -1,4 +1,4 @@
-# Threat IP Intelligence v0.1 — 中文部署手册
+# Threat IP Intelligence v0.1.1 — 中文部署手册
 
 ## 0. 安全承诺与先决条件
 

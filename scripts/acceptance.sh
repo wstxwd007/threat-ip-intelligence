@@ -16,5 +16,5 @@ p=pathlib.Path(sys.argv[1]); manifest=json.loads((p/'manifest.json').read_text()
 content=(p/'ipv4.txt').read_bytes()
 assert manifest['ipv4_count']==4
 assert hashlib.sha256(content).hexdigest()==manifest['ipv4_sha256']
-print('ACCEPTANCE PASS: 21 tests + fixture build + SHA-256; RouterOS untouched')
+print('ACCEPTANCE PASS: fixture build + SHA-256; RouterOS untouched (see test count above)')
 PY

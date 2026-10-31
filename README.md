@@ -2,7 +2,7 @@
 
 [![Tests](../../actions/workflows/test.yml/badge.svg)](../../actions/workflows/test.yml)
 
-**版本：v0.1.0 — 首次可部署候选版（只读预演优先）**  
+**版本：v0.1.1 — Spamhaus 官方 NDJSON 格式修复（只读预演优先）**
 面向 MikroTik RouterOS 7 的公开威胁 IP 数据构建器与安全更新客户端。项目是独立开发的开源工具，不属于 MikroTik、Spamhaus、abuse.ch 或 ros6 的官方产品。
 
 > 核心承诺：**不修改现有 RAW 规则；不清空 `scaners`；不删除 ros6/手工导入的旧条目；默认只读预演。**
@@ -10,7 +10,7 @@
 ## 已实现
 
 - 纯 Python 3.11+ 标准库，不依赖第三方运行时包。
-- GitHub Actions 每 6 小时尝试更新来源、运行 21 项离线单元测试、发布 `dist/ipv4.txt`、`dist/manifest.json` 和 `dist/SHA256SUMS`。
+- GitHub Actions 每 6 小时尝试更新来源、运行离线单元测试、发布 `dist/ipv4.txt`、`dist/manifest.json` 和 `dist/SHA256SUMS`。
 - HTTPS/TLS 验证、数据大小限制、IPv4/CIDR 严格校验、特殊地址拒绝、去重、来源证据元数据、SHA-256 完整性校验。
 - RouterOS 7 HTTPS REST 更新：检查已有 RAW 规则、统计预演差异、**先添加后删除**、限制变更数量、仅删除自己标记为 `TIPI/v1` 的条目、更新后再校验、失败尽可能回滚。
 - 更新失败不发布空名单；客户端失败默认保留现有列表。
@@ -19,7 +19,7 @@
 
 | 来源 | v0.1 默认状态 | 原因 |
 |---|---|---|
-| **Spamhaus DROP IPv4** | 启用 | 官方发布 JSON 数据、要求保留来源和版权归属；详见官方 Fair Use 及项目 manifest |
+| **Spamhaus DROP IPv4** | 启用 | 官方发布 NDJSON 数据、要求保留来源和版权归属；详见官方 Fair Use 及项目 manifest |
 | **abuse.ch Feodo Tracker** | 禁用 | 官方 2026-10-21 Terms 明示 Feodo 数据遵从 CC0 原则；但 2026-10-30 实际下载页可见最近更新为 2026-03-04，现已过期，默认不采用 |
 | **ros6 `scaners.rsc`** | 禁用 | 不确定是否授权第三方公开再分发；本项目仅提供受限解析兼容能力，不转载原始数据 |
 

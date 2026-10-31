@@ -16,6 +16,42 @@ class FeedTests(unittest.TestCase):
         entries, _ = parse_source(data, 'spamhaus_json')
         self.assertEqual(entries, ['8.8.4.0/24', '9.9.9.9'])
 
+    def test_spamhaus_official_ndjson_with_trailer(self):
+        data = (b'{"cidr":"8.8.4.0/24","sblid":"SBL123"}\n'
+                b'{"cidr":"9.9.9.9/32","sblid":"SBL456"}\n'
+                b'{"type":"metadata","timestamp":1793400000,"copyright":"(c) Spamhaus"}\n')
+        entries, stats = parse_source(data, 'spamhaus_json')
+        self.assertEqual(entries, ['8.8.4.0/24', '9.9.9.9'])
+        self.assertEqual(stats['raw_count'], 2)
+
+    def test_spamhaus_single_record_json(self):
+        entries, _ = parse_source(b'{"cidr":"8.8.4.0/24"}', 'spamhaus_json')
+        self.assertEqual(entries, ['8.8.4.0/24'])
+
+    def test_spamhaus_data_array_legacy(self):
+        entries, _ = parse_source(b'{"data":[{"cidr":"8.8.4.0/24"}]}', 'spamhaus_json')
+        self.assertEqual(entries, ['8.8.4.0/24'])
+
+    def test_spamhaus_bad_ndjson_aborts(self):
+        for data in [
+            b'{"cidr":"8.8.4.0/24"}\n<bad html>',
+            b'{"cidr":"8.8.4.0/24"}\n{"bad":"row"}',
+            b'{"cidr":"8.8.4.0/24"}\n{"cidr":42}',
+            b'{"copyright":"c","timestamp":1793400000}\n{"cidr":"8.8.4.0/24"}',
+            b'{"cidr":"8.8.4.0/24"}\n{"timestamp":"unknown","copyright":"c"}',
+        ]:
+            with self.subTest(data=data), self.assertRaises(FeedError):
+                parse_source(data, 'spamhaus_json')
+
+    def test_spamhaus_metadata_only_does_not_publish(self):
+        with self.assertRaises(FeedError):
+            parse_source(b'{"type":"metadata","timestamp":1793400000,"copyright":"c"}\n', 'spamhaus_json')
+
+    def test_spamhaus_rejects_non_global_networks(self):
+        data = b'{"cidr":"192.168.11.0/24"}\n{"cidr":"8.8.4.0/24"}\n'
+        with self.assertRaises(FeedError):
+            parse_source(data, 'spamhaus_json')
+
     def test_no_network_expansion(self):
         entries, _ = parse_source(b'8.8.8.8\n8.8.8.9\n', 'plain')
         self.assertEqual(len(entries), 2)

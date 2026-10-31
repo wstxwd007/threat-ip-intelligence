@@ -64,14 +64,50 @@ def extract_candidates(data: bytes, fmt: str) -> list[str]:
     except UnicodeDecodeError as ex:
         raise FeedError("invalid UTF-8 feed") from ex
     if fmt == "spamhaus_json":
+        # Official DROP is NDJSON: one CIDR object per line, followed by a
+        # metadata object with timestamp/copyright. Older JSON arrays and
+        # {"data": [...]} fixtures remain supported for compatibility.
+        # Treat *every* record as untrusted data; fail closed on invalid rows.
         try:
-            parsed = json.loads(text)
-            records = parsed if isinstance(parsed, list) else parsed["data"]
-            if not isinstance(records, list):
-                raise TypeError()
-            result = [r["cidr"] for r in records if isinstance(r, dict) and isinstance(r.get("cidr"), str)]
-        except (ValueError, KeyError, TypeError) as ex:
-            raise FeedError("invalid Spamhaus JSON feed") from ex
+            if not text.strip():
+                records = []
+            else:
+                try:
+                    parsed = json.loads(text)
+                except json.JSONDecodeError:
+                    parsed = [json.loads(line) for line in text.splitlines() if line.strip()]
+                if isinstance(parsed, list):
+                    records = parsed
+                elif isinstance(parsed, dict) and isinstance(parsed.get("data"), list):
+                    records = parsed["data"]
+                elif isinstance(parsed, dict):
+                    records = [parsed]
+                else:
+                    raise TypeError("unexpected JSON root")
+
+            result = []
+            for index, record in enumerate(records):
+                if not isinstance(record, dict):
+                    raise TypeError("non-object JSON record")
+                if "cidr" in record:
+                    cidr = record["cidr"]
+                    if not isinstance(cidr, str):
+                        raise TypeError("cidr must be a string")
+                    result.append(cidr)
+                elif (
+                    index == len(records) - 1
+                    and "timestamp" in record
+                    and "copyright" in record
+                    and isinstance(record["timestamp"], (int, float))
+                    and not isinstance(record["timestamp"], bool)
+                    and isinstance(record["copyright"], str)
+                ):
+                    # Official DROP trailer is metadata, not an IP entry.
+                    continue
+                else:
+                    raise TypeError("unrecognized DROP record or misplaced metadata")
+        except (ValueError, TypeError) as ex:
+            raise FeedError("invalid Spamhaus JSON/NDJSON feed") from ex
     elif fmt == "plain":
         result = [line.split("#", 1)[0].strip() for line in text.splitlines()]
         result = [item for item in result if item]
