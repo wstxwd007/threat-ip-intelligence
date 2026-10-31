@@ -2,7 +2,7 @@
 
 [![Tests](../../actions/workflows/test.yml/badge.svg)](../../actions/workflows/test.yml)
 
-**版本：v0.1.2 — ros6 只读审计和 CIDR 重叠分析（生产路由器零改动）**
+**版本：v0.1.2-r1 — ros6 NetBSD 纯地址表审计修复（生产路由器零改动）**
 面向 MikroTik RouterOS 7 的公开威胁 IP 数据构建器与安全更新客户端。项目是独立开发的开源工具，不属于 MikroTik、Spamhaus、abuse.ch 或 ros6 的官方产品。
 
 > 核心承诺：**不修改现有 RAW 规则；不清空 `scaners`；不删除 ros6/手工导入的旧条目；默认只读预演。**
@@ -14,7 +14,7 @@
 - HTTPS/TLS 验证、数据大小限制、IPv4/CIDR 严格校验、特殊地址拒绝、去重、来源证据元数据、SHA-256 完整性校验。
 - RouterOS 7 HTTPS REST 更新：检查已有 RAW 规则、统计预演差异、**先添加后删除**、限制变更数量、仅删除自己标记为 `TIPI/v1` 的条目、更新后再校验、失败尽可能回滚。
 - 更新失败不发布空名单；客户端失败默认保留现有列表。
-- **v0.1.2：** 独立 `audit-ros6` Actions 每日尝试只读下载 ros6 `.rsc`，拒绝非地址列表命令，比较 ros6 与已发布 Spamhaus 的地址覆盖范围，只提交不含 ros6 IP/CIDR 的汇总报告；不修改已有 `dist/ipv4.txt`。
+- **v0.1.2-r1：** 独立 `audit-ros6` Actions 每日尝试只读下载 ros6 官方 NetBSD NPF 纯地址文件 `.netbsd`，严格拒绝非地址数据（不下载、不执行 `.rsc`），比较 ros6 与已发布 Spamhaus 的地址覆盖范围，只提交不含 ros6 IP/CIDR 的汇总报告；不修改已有 `dist/ipv4.txt`。
 
 ## 数据源与再分发规则
 
@@ -22,7 +22,7 @@
 |---|---|---|
 | **Spamhaus DROP IPv4** | 启用 | 官方发布 NDJSON 数据、要求保留来源和版权归属；详见官方 Fair Use 及项目 manifest |
 | **abuse.ch Feodo Tracker** | 禁用 | 官方 2026-10-21 Terms 明示 Feodo 数据遵从 CC0 原则；但 2026-10-30 实际下载页可见最近更新为 2026-03-04，现已过期，默认不采用 |
-| **ros6 `scaners.rsc`** | **不加入公开封禁库；单独只读分析** | 未确认数据再分发授权；GitHub Actions 只发布统计及哈希，绝不转载原始数据 |
+| **ros6 `scaners.netbsd`** | **不加入公开封禁库；单独只读分析** | 未确认数据再分发授权；GitHub Actions 只发布统计及哈希，绝不转载原始数据 |
 
 项目源代码按 MIT 许可发布；**该许可不覆盖第三方情报数据**。Spamhaus 数据来源、声明与作者权益记录在每次的 `manifest.json`；请遵循其最新发布使用政策。启用其他来源前必须核实许可、更新频率及准确度。
 
@@ -61,19 +61,19 @@ cat /tmp/tipi-demo/manifest.json
 
 详细安全措施见 [安全模型](docs/SECURITY-ZH.md)。
 
-### v0.1.2 ros6 只读审计
+### v0.1.2-r1 ros6 只读审计
 
 项目升级不需要重新建 GitHub 仓库。`audit-ros6` 工作流每日自动尝试一次，也支持 `gh workflow run audit-ros6.yml --ref main` 手动触发。
 生成 `reports/ros6-latest.json` 和 `reports/ros6-latest.md`，仅包含聚合统计与来源哈希。解析失败、源站不可达或 Spamhaus 发布太旧时工作流失败，保留原报告。
-**不要把 ros6 `.rsc`、路由器导出或混合名单提交到公开仓库。** 具体命令、质量指标及故障排查见 [ros6 审计手册](docs/ROS6-AUDIT-ZH.md)。
+**不要把 ros6 `.rsc`、`.netbsd` 原始文件、路由器导出或混合名单提交到公开仓库。** 具体命令、质量指标及故障排查见 [ros6 审计手册](docs/ROS6-AUDIT-ZH.md)。
 
 ## v0.1 的边界
 
 - 目前只发布 IPv4；RouterOS `/ip firewall raw` 不能保护 IPv6，IPv6 需独立设计。
 - IPv4 名单为精确集合，不把若干 `/32` 推测成整个 `/24`；尚不做历史置信度评分或自动 TTL 学习。
 - GH Actions 是非实时发布；源站停更、失效或下载失败时不发布新版本。
-- ros6 源文件目前没有可靠、可验证的内置更新时间字段，v0.1.2 只能证明采集时间和内容哈希，不能证明源库本身何时更新。
-- ros6 原始文件格式与 GitHub runner 到非标准 HTTPS 端口 9443 的实际连通性，必须以真实工作流验收；离线测试通过不等于线上一定成功。
+- ros6 源文件目前没有可靠、可验证的内置更新时间字段，v0.1.2-r1 只能证明采集时间和内容哈希，不能证明源库本身何时更新。
+- ros6 `scaners.netbsd` 数据文件的实际语法与 GitHub Runner 到 HTTPS 端口 9443 的连通性，仍需通过真实工作流验收。作者的文档确认该文件供 NPF table 使用，但我们当前环境尚无法读取内容；本版会在遇到非纯地址行时停止，不会发布伪报告。
 - 公共哈希验证不等于来源签名验证；如果 GitHub 仓库和 manifest 一起被攻击者替换，SHA-256 无法发现。需通过 GitHub 权限管理、分支保护和后续签名版本增强。
 - 未经连接验证，不能保证你的 RB5009 已启用 `www-ssl` 或网络可达。本项目**不会自动启用公网管理端口**。
 - 目前每次变更使用多个 REST 请求，不具备 RouterOS 原子事务，断网时会尝试补偿回滚但不能保证完全回滚；详见安全手册。

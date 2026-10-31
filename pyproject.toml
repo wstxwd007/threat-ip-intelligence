@@ -1,6 +1,6 @@
 [project]
 name = "threat-ip-intelligence"
-version = "0.1.2"
+version = "0.1.2.post1"
 description = "Open-source verified threat IP feeds and conservative MikroTik RouterOS updater"
 requires-python = ">=3.11"
 license = "MIT"

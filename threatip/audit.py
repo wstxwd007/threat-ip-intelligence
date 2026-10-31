@@ -168,8 +168,8 @@ def audit(config_path: Path, published_dist: Path, outdir: Path,
     config_path = config_path.resolve()
     root = config_path.parent.parent
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    if config.get("format") != "ros6_rsc":
-        raise FeedError("ros6 audit source must use ros6_rsc parser")
+    if config.get("format") != "ros6_npf_plain":
+        raise FeedError("ros6 audit source must use the non-executable ros6_npf_plain parser")
     now = now or datetime.now(timezone.utc)
     if now.tzinfo is None:
         raise FeedError("audit clock must be timezone-aware")
@@ -185,7 +185,7 @@ def audit(config_path: Path, published_dist: Path, outdir: Path,
             raise FeedError("local ros6 file too large")
     else:
         payload = fetch_source(ros6_source, root)
-    ros6, stats = parse_source(payload, "ros6_rsc")
+    ros6, stats = parse_source(payload, "ros6_npf_plain")
     if stats["rejected_count"]:
         raise FeedError("ros6 contains invalid IPv4/CIDR: no partial audit")
     lower = int(config.get("min_ros6_entries", 1000))
@@ -195,10 +195,10 @@ def audit(config_path: Path, published_dist: Path, outdir: Path,
     spamhaus, manifest = _published_spamhaus(published_dist, max_age_hours, now)
     comparison = compare_feeds(ros6, spamhaus)
     report = {
-        "schema": 1, "project": "threat-ip-intelligence", "version": "0.1.2",
+        "schema": 1, "project": "threat-ip-intelligence", "version": "0.1.2-r1",
         "mode": "AUDIT_ONLY_NO_PUBLIC_ROS6_IPS", "generated_at": now.isoformat(timespec="seconds"),
         "inputs": {
-            "ros6_source": "ros6.com scaners.rsc",
+            "ros6_source": "ros6.com scaners.netbsd",
             "ros6_sha256": sha256(payload),
             "ros6_raw_count": stats["raw_count"],
             "ros6_duplicate_rows": stats["raw_count"] - len(ros6),
@@ -219,7 +219,7 @@ def audit(config_path: Path, published_dist: Path, outdir: Path,
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="只读审计 ros6 与已发布 Spamhaus 交集，不公开 ros6 原始地址")
+    p = argparse.ArgumentParser(description="只读审计 ros6 NetBSD 纯地址表与已发布 Spamhaus 交集，不公开 ros6 原始地址")
     p.add_argument("--config", default="config/ros6-audit.json")
     p.add_argument("--dist", default="dist")
     p.add_argument("--out", default="reports")

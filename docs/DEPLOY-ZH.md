@@ -1,4 +1,4 @@
-# Threat IP Intelligence v0.1.2 — 中文部署手册
+# Threat IP Intelligence — 中文部署手册（v0.1.2-r1 补充）
 
 ## 0. 安全承诺与先决条件
 
@@ -182,3 +182,24 @@ gh run list --workflow audit-ros6.yml --limit 5
 成功后浏览 `reports/ros6-latest.md`。若失败，使用 `gh run view <运行ID> --log-failed` 查看失败原因。**不能以 `-k` 跳过 TLS 校验来强行通过验收。**
 
 ros6 私有文件、RB5009 导出及 `.rsc` 不应进入公开仓库，更多见 [ROS6-AUDIT-ZH.md](ROS6-AUDIT-ZH.md)。
+
+
+## 9. v0.1.2-r1 修复首次 ros6 审计失败（Windows 覆盖升级）
+
+已在 GitHub 完成 v0.1.2 提交的用户，直接将 v0.1.2-r1 完整 ZIP 解压覆盖到现有 `threat-ip-intelligence`，**保留 `.git` 和 `dist/`**，不需要 `git init`。
+
+```powershell
+cd "$env:USERPROFILE\Downloads\threat-ip-intelligence"
+git status --short
+git diff --check
+git add -A
+git diff --cached --check
+git commit -m "fix: use ros6 NetBSD plain address feed v0.1.2-r1"
+git push origin main
+
+gh run list --workflow test.yml --limit 3
+gh workflow run audit-ros6.yml --ref main
+gh run list --workflow audit-ros6.yml --limit 3
+```
+
+Windows 上没有 `py` 命令可跳过本地测试，以 GitHub `tests` 工作流确认通过。**上述操作不会更新 RB5009**。首次真实审计成功后再执行 `git pull --ff-only` 获取匿名统计报告；失败时执行 `gh run view <ID> --log-failed`。

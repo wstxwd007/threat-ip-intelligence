@@ -1,5 +1,14 @@
 # 更新记录
 
+## v0.1.2-r1 — 2026-10-31
+
+- 修复首次 GitHub `audit-ros6` 报错 `unsupported RouterOS script directive`。
+- 官方网站另有 NetBSD NPF `scaners.netbsd` 数据文件：审计改从此地址读取纯 IP/CIDR，不再尝试解析可执行 RSC；旧 RSC 解析器严格性不变。
+- 新增拒绝脚本、HTML、异常行、非公网地址、损坏 UTF-8 的回归测试，避免靠跳过未知命令来掩盖问题。
+- `audit-ros6` 仅发布汇总统计和哈希；公开 Spamhaus 发布流程、RB5009 `scaners` 与 RAW 都不修改。
+- 本地离线测试 47/47 PASS；`scaners.netbsd` 真实源文件格式及 Github Actions 连接仍待线上验收，失败会保留上次统计。
+
+
 ## v0.1.2 — 2026-10-31
 
 - 新增 `threatip.audit`：下载或从本地只读解析 ros6 `scaners.rsc`，全程不执行 RSC、不接触 RouterOS API。

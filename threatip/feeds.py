@@ -112,6 +112,23 @@ def extract_candidates(data: bytes, fmt: str) -> list[str]:
     elif fmt == "plain":
         result = [line.split("#", 1)[0].strip() for line in text.splitlines()]
         result = [item for item in result if item]
+    elif fmt == "ros6_npf_plain":
+        # ros6 also publishes an NPF table file for NetBSD. This is a DATA
+        # format, unlike the executable RouterOS .rsc script. Reject every
+        # non-address line instead of skipping unexpected content: otherwise
+        # an HTML error page or upstream format change could go unnoticed.
+        result = []
+        for number, raw in enumerate(text.splitlines(), start=1):
+            line = raw.strip()
+            if not line or line.startswith("#"):
+                continue
+            # NPF table files are one literal IP/CIDR per line. Comments
+            # may follow #, but commands, expressions, CSV, and directives
+            # are not allowed under any circumstances.
+            token = line.split("#", 1)[0].strip()
+            if not token or not re.fullmatch(r"[0-9a-fA-F.:/]+", token):
+                raise FeedError(f"unsupported ros6 NPF data format at line {number}")
+            result.append(token)
     elif fmt == "ros6_rsc":
         # RouterOS .rsc is UNTRUSTED CODE, not a data format. Parse only a
         # narrowly allowed subset of address-list additions; NEVER execute or

@@ -88,6 +88,39 @@ class Ros6ParserTests(unittest.TestCase):
             parse_source(b'add list=scaners address=10.0.0.0/8', 'ros6_rsc')
 
 
+class NpfPlainParserTests(unittest.TestCase):
+    def test_netbsd_plain_addresses_with_comments_and_crlf(self):
+        data = b"# ros6 netbsd table\r\n8.8.8.8\r\n9.9.9.0/24  # sample\r\n\r\n"
+        self.assertEqual(extract_candidates(data, "ros6_npf_plain"),
+                         ["8.8.8.8", "9.9.9.0/24"])
+
+    def test_refuses_routeros_commands_and_script_constructs(self):
+        for raw in (
+            b"/ip firewall address-list\nadd list=scaners address=8.8.8.8\n",
+            b"remove [find list=scaners]\n",
+            b"8.8.8.8; /system reboot\n",
+            b"$(danger)\n",
+            b"8.8.8.8\\\n",
+            b"<html>upstream unavailable</html>",
+            b"8.8.8.8 9.9.9.9",
+            b"8.8.8.8,9.9.9.9",
+        ):
+            with self.subTest(raw=raw), self.assertRaises(FeedError):
+                extract_candidates(raw, "ros6_npf_plain")
+
+    def test_refuses_invalid_address_in_audit(self):
+        for raw in (b"8.8.8.8\n10.0.0.1\n", b"8.8.8.8\n0.0.0.0/0\n"):
+            with self.subTest(raw=raw):
+                with self.assertRaises(FeedError):
+                    parse_source(raw, "ros6_npf_plain")
+
+    def test_explicit_format_and_count_are_required(self):
+        with self.assertRaises(FeedError):
+            parse_source(b"# header only\n", "ros6_npf_plain")
+        with self.assertRaises(FeedError):
+            extract_candidates(bytes([0xff]), "ros6_npf_plain")
+
+
 class AuditEndToEndTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -96,10 +129,9 @@ class AuditEndToEndTests(unittest.TestCase):
         for d in ('config', 'dist', 'reports'):
             (self.root/d).mkdir()
         self.ros6 = self.root/'local-rsc.txt'
-        self.ros6.write_text('/ip firewall address-list\nadd list=scaners address=8.8.8.8\n'
-                             'add address=1.1.1.1 list=scaners\n', encoding='utf-8')
+        self.ros6.write_text('# NPF IP table\n8.8.8.8\n1.1.1.1\n', encoding='utf-8')
         self.config = self.root/'config'/'ros6-audit.json'
-        self.config.write_text(json.dumps({'format': 'ros6_rsc', 'url': 'https://example.com/scaners.rsc',
+        self.config.write_text(json.dumps({'format': 'ros6_npf_plain', 'url': 'https://example.com/scaners.netbsd',
                                            'min_ros6_entries': 1, 'max_ros6_entries': 100,
                                            'max_spamhaus_age_hours': 72}), encoding='utf-8')
         self.feed = b'# synthetic\n8.8.8.0/24\n9.9.9.9\n'
@@ -155,7 +187,7 @@ class AuditEndToEndTests(unittest.TestCase):
     def test_parser_error_does_not_modify_old_report(self):
         p = self.root/'reports'/'ros6-latest.json'
         p.write_text('PREVIOUS REPORT')
-        self.ros6.write_text('add address=8.8.8.8 list=scaners\n/system reset-configuration\n')
+        self.ros6.write_text('8.8.8.8\n/system reset-configuration\n')
         with self.assertRaises(FeedError):
             audit(self.config, self.root/'dist', self.root/'reports', self.ros6, FIXED_NOW)
         self.assertEqual(p.read_text(), 'PREVIOUS REPORT')

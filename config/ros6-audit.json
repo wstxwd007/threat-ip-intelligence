@@ -1,6 +1,6 @@
 {
-  "format": "ros6_rsc",
-  "url": "https://pcdn.ros6.com:9443/oss/scaners.rsc",
+  "format": "ros6_npf_plain",
+  "url": "https://pcdn.ros6.com:9443/oss/scaners.netbsd",
   "min_ros6_entries": 1000,
   "max_ros6_entries": 100000,
   "max_spamhaus_age_hours": 72,
