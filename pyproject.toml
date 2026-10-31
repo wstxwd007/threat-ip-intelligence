@@ -1,6 +1,6 @@
 [project]
 name = "threat-ip-intelligence"
-version = "0.1.2.post1"
+version = "0.1.3"
 description = "Open-source verified threat IP feeds and conservative MikroTik RouterOS updater"
 requires-python = ">=3.11"
 license = "MIT"
@@ -10,6 +10,8 @@ authors = [{name = "Threat IP Intelligence contributors"}]
 tipi-build = "threatip.build:main"
 tipi-audit = "threatip.audit:main"
 tipi-routeros = "threatip.routeros:main"
+tipi-quality = "threatip.quality:main"
+tipi-router-audit = "threatip.router_audit:main"
 
 [build-system]
 requires = ["setuptools>=69"]

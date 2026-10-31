@@ -195,7 +195,7 @@ def audit(config_path: Path, published_dist: Path, outdir: Path,
     spamhaus, manifest = _published_spamhaus(published_dist, max_age_hours, now)
     comparison = compare_feeds(ros6, spamhaus)
     report = {
-        "schema": 1, "project": "threat-ip-intelligence", "version": "0.1.2-r1",
+        "schema": 1, "project": "threat-ip-intelligence", "version": "0.1.3",
         "mode": "AUDIT_ONLY_NO_PUBLIC_ROS6_IPS", "generated_at": now.isoformat(timespec="seconds"),
         "inputs": {
             "ros6_source": "ros6.com scaners.netbsd",

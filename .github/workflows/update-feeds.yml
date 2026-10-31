@@ -1,7 +1,8 @@
 name: publish-ip-feeds
 on:
   schedule:
-    - cron: '17 */6 * * *'
+    # Spamhaus DROP advises daily download; avoid 6-hour refreshes.
+    - cron: '17 3 * * *'
   workflow_dispatch:
 permissions:
   contents: write
@@ -10,7 +11,6 @@ concurrency:
   cancel-in-progress: false
 jobs:
   publish:
-    # Only default repository branch is allowed to write generated feeds.
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -20,16 +20,29 @@ jobs:
           persist-credentials: true
       - name: Run tests before network access
         run: python3 -m unittest discover -s tests -v
-      - name: Build checked threat feed
-        run: python3 -m threatip.build --config config/sources.json --out dist
-      - name: Publish data files only if changed
+      - name: Build candidate in isolated temporary directory
+        run: python3 -m threatip.build --config config/sources.json --out "$RUNNER_TEMP/tipi-candidate"
+      - name: Fail-closed CIDR and coverage change gate
         run: |
-          git add dist/ipv4.txt dist/manifest.json dist/SHA256SUMS
+          test -s dist/ipv4.txt
+          python3 -m threatip.quality \
+            --old dist/ipv4.txt \
+            --candidate "$RUNNER_TEMP/tipi-candidate/ipv4.txt" \
+            --policy config/quality-policy.json \
+            --out reports/quality-latest.json
+      - name: Promote validated candidate, never on quality failure
+        run: |
+          cp "$RUNNER_TEMP/tipi-candidate/ipv4.txt" dist/ipv4.txt
+          cp "$RUNNER_TEMP/tipi-candidate/manifest.json" dist/manifest.json
+          cp "$RUNNER_TEMP/tipi-candidate/SHA256SUMS" dist/SHA256SUMS
+      - name: Publish feed and aggregate quality report
+        run: |
+          git add dist/ipv4.txt dist/manifest.json dist/SHA256SUMS reports/quality-latest.json
           if git diff --cached --quiet; then
-            echo 'No feed change'
+            echo 'No feed or quality report change'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'data: update validated threat IP feed'
+          git commit -m 'data: publish validated feed and quality audit'
           git push origin HEAD:main

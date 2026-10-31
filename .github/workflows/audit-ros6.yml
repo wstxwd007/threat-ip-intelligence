@@ -6,7 +6,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: threat-ip-ros6-audit
+  group: threat-ip-publisher
   cancel-in-progress: false
 jobs:
   audit:

@@ -1,4 +1,4 @@
-# Threat IP Intelligence — 中文部署手册（v0.1.2-r1 补充）
+# Threat IP Intelligence — 中文部署手册（更新至 v0.1.3）
 
 ## 0. 安全承诺与先决条件
 
@@ -31,7 +31,7 @@ https://raw.githubusercontent.com/<GitHub用户名>/threat-ip-intelligence/main/
 https://raw.githubusercontent.com/<GitHub用户名>/threat-ip-intelligence/main/dist/ipv4.txt
 ```
 
-自动更新计划：每 6 小时尝试，GitHub Actions 定时任务不保证准点。首次成功之前 `dist/` 仅有 `.gitkeep`，不能部署。
+自动更新计划：每天 03:17 UTC 尝试，GitHub Actions 定时任务不保证准点。现有仓库已完成首次 Spamhaus 发布，升级时必须保留 `dist/ipv4.txt`、`dist/manifest.json`；v0.1.3 发布前新增候选质量闸门。
 
 ## 2. 本地构建与测试（可选）
 
@@ -203,3 +203,9 @@ gh run list --workflow audit-ros6.yml --limit 3
 ```
 
 Windows 上没有 `py` 命令可跳过本地测试，以 GitHub `tests` 工作流确认通过。**上述操作不会更新 RB5009**。首次真实审计成功后再执行 `git pull --ff-only` 获取匿名统计报告；失败时执行 `gh run view <ID> --log-failed`。
+
+## v0.1.3 重要补充
+
+- 公开发布任务目前要求已存在可信的旧 `dist/ipv4.txt`，不会在数据异常或空基线时放行。详见 [质量控制手册](QUALITY-V013-ZH.md)。
+- 将 ros6、Spamhaus、RB5009 `scaners` 放在一起分析时，请在**内网**运行 [三方私有只读审计](ROUTER-PRIVATE-AUDIT-ZH.md)，不能在 GitHub Actions 中使用路由器凭据。
+- 旧 ros6 全量清空再导入的更新器仍可能覆盖本程序添加的条目。在统一更新方案验收前不要启用 v0.1.1 的 `--apply`。

@@ -1,0 +1,7 @@
+{
+  "large_prefix_threshold": 16,
+  "max_added_unique_ipv4": 2000000,
+  "max_added_ratio": 0.25,
+  "max_removed_ratio": 0.35,
+  "max_new_large_cidrs": 2
+}
