@@ -1,5 +1,5 @@
 # Threat IP Intelligence IPv4 v1
-# Data generated at: 2026-10-31T09:38:49+00:00
+# Data generated at: 2026-11-01T10:27:30+00:00
 # Source credit: © Spamhaus Project; source refreshed on the published date
 # Details, rights and source hashes: manifest.json
 1.10.16.0/20
@@ -454,7 +454,6 @@
 94.26.105.0/24
 94.26.106.0/24
 94.74.164.0/24
-94.74.191.0/24
 94.154.40.0/24
 94.154.43.0/24
 94.154.46.0/24
