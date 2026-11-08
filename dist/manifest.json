@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-07T10:08:29+00:00",
+  "generated_at": "2026-11-08T10:22:58+00:00",
   "ipv4_count": 1763,
   "ipv4_file": "ipv4.txt",
-  "ipv4_sha256": "8240ea619bf19b03f66cd9420a73f1da7c1e03d54f14a2cfa31ceb9e8f5a579e",
+  "ipv4_sha256": "e8e559c5c09255b5ce4854461c1550741f1866ae9225d581c9b2bbbbac92bd5a",
   "policy": "exact-set-no-expansion; private/special ranges excluded",
   "project": "threat-ip-intelligence",
   "schema": 1,
@@ -14,7 +14,7 @@
       "name": "Spamhaus DROP IPv4",
       "raw_count": 1764,
       "rejected_count": 0,
-      "sha256_source": "d68be3b0ec57f35e2dfec8c30f4e7ac7f208348a3970b8b9601ace7565ef251b",
+      "sha256_source": "bff9858bfa31538b2698eb596a75d5d84a7d46b5a139d54617dfa662a8545bb4",
       "valid_count": 1763
     }
   ]
