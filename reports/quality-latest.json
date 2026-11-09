@@ -1,6 +1,6 @@
 {
   "candidate": {
-    "entry_count": 1763,
+    "entry_count": 1761,
     "large_cidr_address_sum_not_deduplicated": 11665408,
     "large_cidr_entries": 123,
     "large_prefix_threshold": "/16",
@@ -16,23 +16,23 @@
       "/21": 84,
       "/22": 344,
       "/23": 149,
-      "/24": 810
+      "/24": 808
     },
     "single_ip_entries": 0,
     "unique_ipv4_addresses": 14897664
   },
-  "candidate_sha256": "e8e559c5c09255b5ce4854461c1550741f1866ae9225d581c9b2bbbbac92bd5a",
+  "candidate_sha256": "811d342a505108cfceb42ae8c8ba757c57e9493edfb9761a4051feebcd176201",
   "changes": {
     "added_coverage_ratio": 0.0,
     "exact_entries_added": 0,
-    "exact_entries_removed": 0,
+    "exact_entries_removed": 2,
     "ipv4_addresses_added_to_coverage": 0,
     "ipv4_addresses_removed_from_coverage": 0,
     "new_large_cidr_entries": 0,
     "removed_coverage_ratio": 0.0
   },
   "decision": "PASS",
-  "generated_at": "2026-11-08T10:22:58+00:00",
+  "generated_at": "2026-11-09T11:31:36+00:00",
   "note": "coverage size is not false-positive rate; never infer malicious hosts from covered IP count",
   "old": {
     "entry_count": 1763,
@@ -56,7 +56,7 @@
     "single_ip_entries": 0,
     "unique_ipv4_addresses": 14897664
   },
-  "old_sha256": "8240ea619bf19b03f66cd9420a73f1da7c1e03d54f14a2cfa31ceb9e8f5a579e",
+  "old_sha256": "e8e559c5c09255b5ce4854461c1550741f1866ae9225d581c9b2bbbbac92bd5a",
   "review_reasons": [],
   "schema": 1,
   "version": "0.1.3"
