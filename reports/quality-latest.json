@@ -1,5 +1,40 @@
 {
   "candidate": {
+    "entry_count": 1763,
+    "large_cidr_address_sum_not_deduplicated": 11665408,
+    "large_cidr_entries": 123,
+    "large_prefix_threshold": "/16",
+    "prefix_histogram": {
+      "/12": 3,
+      "/14": 2,
+      "/15": 4,
+      "/16": 114,
+      "/17": 22,
+      "/18": 48,
+      "/19": 70,
+      "/20": 113,
+      "/21": 83,
+      "/22": 344,
+      "/23": 149,
+      "/24": 811
+    },
+    "single_ip_entries": 0,
+    "unique_ipv4_addresses": 14896384
+  },
+  "candidate_sha256": "8668ee15d2efeeaa4008cad252a7409892269e498cba97e9c576c82727a93eef",
+  "changes": {
+    "added_coverage_ratio": 5.155e-05,
+    "exact_entries_added": 3,
+    "exact_entries_removed": 1,
+    "ipv4_addresses_added_to_coverage": 768,
+    "ipv4_addresses_removed_from_coverage": 2048,
+    "new_large_cidr_entries": 0,
+    "removed_coverage_ratio": 0.00013747
+  },
+  "decision": "PASS",
+  "generated_at": "2026-11-10T11:12:06+00:00",
+  "note": "coverage size is not false-positive rate; never infer malicious hosts from covered IP count",
+  "old": {
     "entry_count": 1761,
     "large_cidr_address_sum_not_deduplicated": 11665408,
     "large_cidr_entries": 123,
@@ -21,42 +56,7 @@
     "single_ip_entries": 0,
     "unique_ipv4_addresses": 14897664
   },
-  "candidate_sha256": "811d342a505108cfceb42ae8c8ba757c57e9493edfb9761a4051feebcd176201",
-  "changes": {
-    "added_coverage_ratio": 0.0,
-    "exact_entries_added": 0,
-    "exact_entries_removed": 2,
-    "ipv4_addresses_added_to_coverage": 0,
-    "ipv4_addresses_removed_from_coverage": 0,
-    "new_large_cidr_entries": 0,
-    "removed_coverage_ratio": 0.0
-  },
-  "decision": "PASS",
-  "generated_at": "2026-11-09T11:31:36+00:00",
-  "note": "coverage size is not false-positive rate; never infer malicious hosts from covered IP count",
-  "old": {
-    "entry_count": 1763,
-    "large_cidr_address_sum_not_deduplicated": 11665408,
-    "large_cidr_entries": 123,
-    "large_prefix_threshold": "/16",
-    "prefix_histogram": {
-      "/12": 3,
-      "/14": 2,
-      "/15": 4,
-      "/16": 114,
-      "/17": 22,
-      "/18": 48,
-      "/19": 70,
-      "/20": 113,
-      "/21": 84,
-      "/22": 344,
-      "/23": 149,
-      "/24": 810
-    },
-    "single_ip_entries": 0,
-    "unique_ipv4_addresses": 14897664
-  },
-  "old_sha256": "e8e559c5c09255b5ce4854461c1550741f1866ae9225d581c9b2bbbbac92bd5a",
+  "old_sha256": "811d342a505108cfceb42ae8c8ba757c57e9493edfb9761a4051feebcd176201",
   "review_reasons": [],
   "schema": 1,
   "version": "0.1.3"
