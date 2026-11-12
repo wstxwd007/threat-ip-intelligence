@@ -1,6 +1,6 @@
 {
   "candidate": {
-    "entry_count": 1763,
+    "entry_count": 1755,
     "large_cidr_address_sum_not_deduplicated": 11665408,
     "large_cidr_entries": 123,
     "large_prefix_threshold": "/16",
@@ -15,24 +15,24 @@
       "/20": 113,
       "/21": 83,
       "/22": 344,
-      "/23": 149,
-      "/24": 811
+      "/23": 148,
+      "/24": 804
     },
     "single_ip_entries": 0,
-    "unique_ipv4_addresses": 14896384
+    "unique_ipv4_addresses": 14894080
   },
-  "candidate_sha256": "14fed1e31c0f709e35d8aacb1015182b6bab950b676fa2abe70e5811a42cc951",
+  "candidate_sha256": "9393ee783e99dc1b6c85b66360fc61e46443d4d899376740080b32ea05a4e470",
   "changes": {
     "added_coverage_ratio": 0.0,
     "exact_entries_added": 0,
-    "exact_entries_removed": 0,
+    "exact_entries_removed": 8,
     "ipv4_addresses_added_to_coverage": 0,
-    "ipv4_addresses_removed_from_coverage": 0,
+    "ipv4_addresses_removed_from_coverage": 2304,
     "new_large_cidr_entries": 0,
-    "removed_coverage_ratio": 0.0
+    "removed_coverage_ratio": 0.00015467
   },
   "decision": "PASS",
-  "generated_at": "2026-11-11T10:57:07+00:00",
+  "generated_at": "2026-11-12T11:09:07+00:00",
   "note": "coverage size is not false-positive rate; never infer malicious hosts from covered IP count",
   "old": {
     "entry_count": 1763,
@@ -56,7 +56,7 @@
     "single_ip_entries": 0,
     "unique_ipv4_addresses": 14896384
   },
-  "old_sha256": "8668ee15d2efeeaa4008cad252a7409892269e498cba97e9c576c82727a93eef",
+  "old_sha256": "14fed1e31c0f709e35d8aacb1015182b6bab950b676fa2abe70e5811a42cc951",
   "review_reasons": [],
   "schema": 1,
   "version": "0.1.3"
