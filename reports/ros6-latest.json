@@ -16,15 +16,15 @@
     "spamhaus_ipv4_addresses_covered": 15025408,
     "spamhaus_single_ip_entries": 0
   },
-  "generated_at": "2026-11-15T09:57:02+00:00",
+  "generated_at": "2026-11-16T10:11:37+00:00",
   "inputs": {
     "ros6_duplicate_rows": 0,
     "ros6_raw_count": 27565,
     "ros6_rejected_count": 0,
     "ros6_sha256": "056a15c587f05f0dc023f28b6f8fac16ac7cd16ffe48f3affd6dd89387942344",
     "ros6_source": "ros6.com scaners.netbsd",
-    "spamhaus_ipv4_sha256": "b5b611e3bec43f5985d17e1dc10cc4452ede8b1c7242451100fd1cf195885a9b",
-    "spamhaus_published_at": "2026-11-14T10:25:33+00:00"
+    "spamhaus_ipv4_sha256": "bb95bb6b830ed729e90d4042d2c9120ac2867fd9c507bbd690314e98077bc437",
+    "spamhaus_published_at": "2026-11-15T10:52:57+00:00"
   },
   "mode": "AUDIT_ONLY_NO_PUBLIC_ROS6_IPS",
   "notes": [
