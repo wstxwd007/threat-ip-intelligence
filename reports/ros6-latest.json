@@ -1,30 +1,30 @@
 {
   "comparison": {
-    "additional_ipv4_addresses_from_ros6": 40442,
+    "additional_ipv4_addresses_from_ros6": 40563,
     "additional_ipv4_addresses_from_spamhaus": 15019567,
-    "combined_unique_ipv4_addresses": 15062266,
+    "combined_unique_ipv4_addresses": 15062387,
     "exact_same_entries": 1,
     "overlap_ipv4_addresses": 2257,
-    "ros6_cidr_entries": 1102,
-    "ros6_entries_fully_covered_by_spamhaus": 1562,
-    "ros6_entry_count": 29403,
-    "ros6_ipv4_addresses_covered": 42699,
-    "ros6_single_ip_entries": 28301,
+    "ros6_cidr_entries": 1110,
+    "ros6_entries_fully_covered_by_spamhaus": 1565,
+    "ros6_entry_count": 29520,
+    "ros6_ipv4_addresses_covered": 42820,
+    "ros6_single_ip_entries": 28410,
     "spamhaus_cidr_entries": 1736,
     "spamhaus_entries_fully_covered_by_ros6": 1,
     "spamhaus_entry_count": 1736,
     "spamhaus_ipv4_addresses_covered": 15021824,
     "spamhaus_single_ip_entries": 0
   },
-  "generated_at": "2026-11-26T11:31:31+00:00",
+  "generated_at": "2026-11-27T11:26:48+00:00",
   "inputs": {
     "ros6_duplicate_rows": 0,
-    "ros6_raw_count": 29403,
+    "ros6_raw_count": 29520,
     "ros6_rejected_count": 0,
-    "ros6_sha256": "71c90f4ee5bea9fa240c0ff0761c31ab8be47c5dcd8db1720c6e786544f6f354",
+    "ros6_sha256": "5d9c5c0b0fa6bacbb935b009eef96a6bb810d839bca45496bfe2a3a6e4a20170",
     "ros6_source": "ros6.com scaners.netbsd",
-    "spamhaus_ipv4_sha256": "b3335a5c8361cb9bf0e9be67466d98a28a1ac626e039a05ad5c50a84fa06a602",
-    "spamhaus_published_at": "2026-11-25T12:54:49+00:00"
+    "spamhaus_ipv4_sha256": "cb522c45c05798b49a3ae4a9b63ae983c7d49652a77b7d40c2e4e2e101f6042a",
+    "spamhaus_published_at": "2026-11-26T12:33:09+00:00"
   },
   "mode": "AUDIT_ONLY_NO_PUBLIC_ROS6_IPS",
   "notes": [
